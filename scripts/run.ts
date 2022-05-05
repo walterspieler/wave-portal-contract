@@ -2,7 +2,7 @@
 import { ethers } from "hardhat";
 
 const main = async () => {
-  const [owner, randomPerson] = await ethers.getSigners();
+  const [owner] = await ethers.getSigners();
   const waveContractFactory = await ethers.getContractFactory("WavePortal");
   const value = ethers.utils.parseEther("0.1");
   const waveContract = await waveContractFactory.deploy({ value });
@@ -22,13 +22,14 @@ const main = async () => {
 
   await waveContract.getTotalWaves();
 
-  let waveTxn = await waveContract.wave("Hello");
+  /*
+   * Let's try two waves now
+   */
+  const waveTxn = await waveContract.wave("This is wave #1");
   await waveTxn.wait();
 
-  await waveContract.getTotalWaves();
-
-  waveTxn = await waveContract.connect(randomPerson).wave("Hello Back");
-  await waveTxn.wait();
+  const waveTxn2 = await waveContract.wave("This is wave #2");
+  await waveTxn2.wait();
 
   console.log(await waveContract.getTotalWaves());
 };
